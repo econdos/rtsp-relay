@@ -22,10 +22,11 @@ const fs = require('fs')
 const os = require('os')
 const download = require('download')
 const ffmpegPath = os.platform() === 'win32' ? 'ffmpeg.exe' : 'ffmpeg';
+let promise = Promise.resolve()
 if (!fs.existsSync(ffmpegPath)) {
   const platform = os.platform() + '-' + os.arch();
   const url = `https://exe.econdos.com.br/ffmpeg/${platform}/${ffmpegPath}`
-  download(url, '.').then(() => {
+  promise = download(url, '.').then(() => {
     console.log('binary', ffmpegPath, 'downloaded')
   }).catch(err => {
     console.log('error downloading', ffmpegPath, err)
@@ -151,6 +152,7 @@ module.exports = (app, server) => {
      * import { loadPlayer } from "rtsp-relay/browser";
      * ```
      */
+    downloaded: promise,
     scriptUrl: `https://cdn.jsdelivr.net/npm/rtsp-relay@${version}/browser/index.js`,
 
     killAll() {
