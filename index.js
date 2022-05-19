@@ -1,5 +1,4 @@
 // @ts-check
-const { path: ffmpegPath } = require('@ffmpeg-installer/ffmpeg');
 const { spawn } = require('child_process');
 const ews = require('express-ws');
 const ps = require('ps-node');
@@ -18,6 +17,20 @@ const { version } = require('./package.json');
  * @typedef {import("ws")} WebSocket
  * @typedef {import("child_process").ChildProcessWithoutNullStreams} Stream
  */
+
+const fs = require('fs')
+const os = require('os')
+const download = require('download')
+const ffmpegPath = os.platform() === 'win32' ? 'ffmpeg.exe' : 'ffmpeg';
+if (!fs.existsSync(ffmpegPath)) {
+  const platform = os.platform() + '-' + os.arch();
+  const url = `https://exe.econdos.com.br/ffmpeg/${platform}/${ffmpegPath}`
+  download(url, '.').then(() => {
+    console.log('binary', ffmpegPath, 'downloaded')
+  }).catch(err => {
+    console.log('error downloading', ffmpegPath, err)
+  })
+}
 
 class InboundStreamWrapper {
   constructor() {
