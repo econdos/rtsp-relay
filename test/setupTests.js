@@ -1,6 +1,6 @@
 const express = require('express');
 const { spawn } = require('child_process');
-const { path: ffmpegPath } = require('@ffmpeg-installer/ffmpeg');
+const ffmpegPath = 'ffmpeg.exe'
 const { join } = require('path');
 const rtspRelay = require('..');
 
